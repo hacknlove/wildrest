@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="UTF-8" />
+<style>
+
+@charset "utf-8";
+
+body {
+    font-family: Helvetica, Arial, Freesans, clean, sans-serif;
+padding:1em;
+margin:auto;
+max-width:42em;
+background:#fefefe;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+
+h1 {
+    color: #000000;
+    font-size: 28px;
+}
+
+h2 {
+    border-bottom: 1px solid #CCCCCC;
+    color: #000000;
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+h4 {
+    font-size: 16px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    color: #777777;
+    background-color: inherit;
+    font-size: 14px;
+}
+
+hr {
+    height: 0.2em;
+    border: 0;
+    color: #CCCCCC;
+    background-color: #CCCCCC;
+}
+
+p, blockquote, ul, ol, dl, li, table, pre {
+    margin: 15px 0;
+}
+
+code, pre {
+    border-radius: 3px;
+    background-color: #F8F8F8;
+    color: inherit;
+}
+
+code {
+    border: 1px solid #EAEAEA;
+    margin: 0 2px;
+    padding: 0 5px;
+}
+
+pre {
+    border: 1px solid #CCCCCC;
+    line-height: 1.25em;
+    overflow: auto;
+    padding: 6px 10px;
+}
+
+pre > code {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+a, a:visited {
+    color: #4183C4;
+    background-color: inherit;
+    text-decoration: none;
+}
+
+
+
+</style>
+</head>
+<body>
+
+
+<h1><strong>W<em></strong>i<strong></em>ldRest</strong></h1>
+
+<p>the <strong>Wr<em></strong>i<strong></em>te less do rest</strong> php framework</p>
+
+<hr />
+
+<p>WildRest is a php rest framework that lets you focus on your real job.</p>
+
+<h2>hello word</h2>
+
+<ul>
+<li>file <code>usr/config.php</code></li>
+</ul>
+
+<p><code>
+$urls = array(
+  '/' =&gt; array(
+    'GET' =&gt; array()
+  )
+);
+</code></p>
+
+<ul>
+<li>file <code>usr/urls/GET/control.php</code></li>
+</ul>
+
+<p><code>
+response('hello word');
+</code></p>
+
+<h2><code>/usr</code></h2>
+
+<p>All your code goes into the folder <code>/usr</code></p>
+
+<h3>required files and folders</h3>
+
+<ul>
+<li><code>urls/</code></li>
+<li><code>auth.php</code></li>
+<li><code>init.php</code></li>
+<li><code>routes.php</code></li>
+</ul>
+
+<h3><code>urls/</code></h3>
+
+<p>here you create a folder for each first level resource, and inside them a folder for each method.</p>
+
+<p>So if you want to serve <code>GET /foo/bar/:id</code>, you need to create an populate <code>usr/urls/foo/GET</code> </p>
+
+<p>and if you want to serve  <code>DELETE /some/:stuff</code> you need to create and populate <code>usr/urls/some/DELETE</code></p>
+
+<p>Inside of these <code>GET</code>, <code>POST</code>, <code>PUT</code> or <code>WHATEVER</code> folder there have to be three files
+* control.php
+* model.php
+* view.php</p>
+
+<p>This is to help you keeping your code neat.</p>
+
+<h3><code>auth.php</code></h3>
+
+<p>Here you can add your authorization code, in a function like this:</p>
+
+<p><code>
+function auth_check($auth, $code){
+  // check that $code meets $auth requirements
+}
+</code></p>
+
+<h3><code>init.php</code></h3>
+
+<p>Here you can connect with your databases, or do any other start logic.</p>
+
+<h3><code>routes.php</code></h3>
+
+<p>Here you set up your routes in a declarative way.</p>
+
+<p>```
+$routes = array( 
+  '[ROUTE]'=>[METHODS],
+  ...
+);</p>
+
+<p><code>``
+So</code>'foo'=>[METHODS]<code>will cath</code>/foo<code></code>/foo/bar<code></code>/foo/bar/baz` etc </p>
+
+<h4>default</h4>
+
+<p>if there is no match, the framework will return <code>404 not foud</code>, except when there was a default url 
+<code>' default '=&gt;[METHODS]</code> will cath the uncaught ones. </p>
+
+<h4>[METHODS]</h4>
+
+<p><code>
+  array(
+    '[METHOD]'=&gt;[OPTIONS]',
+    ...
+  )
+</code>
+So <code>'GET'=&gt;[OPTIONS]</code> will catch <code>GET /[route]/..</code>
+The undeclared method will get <code>405 Method Not Allowed</code> </p>
+
+<h4>[OPTIONS]</h4>
+
+<p><code>
+    array(
+      'auth'=&gt;[auth]
+      'url'=&gt;array(...),
+      'required query'=&gt;array(...),
+      'optional query'=&gt;array(...),
+      'random query'=&gt;array(...),
+      'required json'=&gt;array(...),
+      'optional json'=&gt;array(...),
+      'random json'=&gt;array(...),
+    )
+</code></p>
+
+<p>No option is required, everyone is optional.</p>
+
+<h5><code>'auth'</code></h5>
+
+<p>it establishs how <code>auth_check</code> will be called, or if it will be called at all.</p>
+
+<p><code>auth_check</code> will not be called if <code>'auth'=&gt;false</code></p>
+
+<p>if <code>'auth'</code> is not set or null, <code>auth_check(null, null)</code> will be called.</p>
+
+<p><code>
+      'auth'=&gt;array([what],[where],[which]),
+</code></p>
+
+<p>so <code>'auth=&gt;array('admin','query','apikey')</code> will call <code>auth_check('admin',$request['query']['apikey'])</code></p>
+
+<p><strong>WARNING</strong>, <code>$request[[where]][[which]]</code> will be unset, before <code>auth_check</code> will be called</p>
+
+<h5><code>'url'</code></h5>
+
+<p>It determines how the url will be parsed</p>
+
+<p>for instance with <code>'url'=&gt;array('bar','baz')</code> requesting <code>/[ROUTE]/thing/other</code> will make <code>$request['url']['bar']</code> equal to <code>thing</code> and <code>$request['url']['baz']</code> equal to <code>other</code>, but requesting <code>/[ROUTE]/thing/other/more</code> or <code>/[ROUTE]/thing/</code> will get <code>404 Not Found</code></p>
+
+<h5><code>required query</code></h5>
+
+<p>It requires some parameters to be passed among the query string, and put them into the $request['query'] array
+If any required parameters is missing, it gets a <code>400 Bad Request</code> error.  </p>
+
+<h5><code>optional query</code></h5>
+
+<p>It puts the declared parameters into the $request['query'], those who are missing will be null.</p>
+
+<h5><code>random query</code></h5>
+
+<p>if <code>'random query'</code> is <code>null</code> or absent, and there is any parameter in the query string that is not declared as required nor as optional, it gets <code>400 Bad Request</code></p>
+
+<p>if <code>'random query'</code> is <code>true</code>, every query string parameter will be put into `$request['query']</p>
+
+<h5><code>required json</code>, <code>optional json</code> and <code>random json</code></h5>
+
+<p>They do the same than the <code>... query</code> ones, but with the request body's json.</p>
+</body>
+</html>
