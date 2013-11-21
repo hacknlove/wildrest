@@ -1,16 +1,16 @@
 <?php
 
-set_error_handler(function(){
-  if(defined(DEBUG)){  
+/*set_error_handler(function(){
+  if(defined('DEBUG')){  
     $error = array(
       'error' => error_get_last(),
-      'backtrace' => debug_backtrace();
-    )
+      'backtrace' => debug_backtrace()
+    );
   }else{
-    $error = 'unknown'
+    $error = 'unknown';
   }
   error(500,$error);
-});
+});*/
 
 /*list of usual status code*/
 $statusCodes = array(
@@ -48,7 +48,7 @@ function error($code, $custom=''){
   exit(json_encode(array('error'=>$text)));
   
 }
-function getJson($request){
+function getJson(){
   $raw = file_get_contents('php://input');
   if($raw){
     $_POST = json_decode($raw, true);
@@ -60,12 +60,12 @@ function getJson($request){
 function matchUrl(){
   global $routes;
 
-  $url = explode('/',strchr($_SERVER['REQUEST_URI'].'?','?',true));
+  $url = explode('/',substr(strchr($_SERVER['REQUEST_URI'].'?','?',true),1));
   $urllength = count($url)-1;
   $match = false;
 
   foreach($routes as $route=>$methods){
-    $route = explode('/',$route,true);
+    $route = explode('/',substr($route,1));
     $routelength = count($route)-1;
     
     if($routelength>$urllength){
@@ -117,13 +117,13 @@ function testParams($name){
   if(!isset($_SERVER[' request'][$name])){
     return;
   }
+  global $$name;
   $array = &$$name;
 
   $random = (isset($_SERVER[' request'][$name]['*']) and $_SERVER[' request'][$name]['*'] ==true);
-
   unset($_SERVER[' request'][$name]['*']);
 
-  foreach($array as $key){
+  foreach($array as $key=>$value){
     if(!$random and !isset($_SERVER[' request'][$name][$key])){
       error(400, "unexpected parameter $key");
     }
@@ -147,19 +147,21 @@ function run(){
   if(isset($_SERVER[' request']['function'])){
     call_user_func($_SERVER[' request']['function']);
   }
-  $folder = "./usr/routes/{$_SERVER[' url'][0]}/{$_SERVER['REQUEST_METHOD']}/";
-  
-  include $folder."control.php";
-  include $folder."model.php";
-  include $folder."view.php";
 }
 
 getJson();
 
-require './usr/init.php';
+require './routes/init.php';
 
 matchUrl();
 auth();
-testParams('_GET');
-testParams('_POST');
+$query = &$_GET;
+testParams('query');
+$json = &$_POST;
+testParams('json');
 run();
+
+$folder = "./routes/routes/{$_SERVER[' url'][0]}/{$_SERVER['REQUEST_METHOD']}/";
+include $folder."control.php";
+include $folder."model.php";
+include $folder."view.php";
