@@ -1,17 +1,5 @@
 <?php
 
-/*set_error_handler(function(){
-  if(defined('DEBUG')){  
-    $error = array(
-      'error' => error_get_last(),
-      'backtrace' => debug_backtrace()
-    );
-  }else{
-    $error = 'unknown';
-  }
-  error(500,$error);
-});*/
-
 /*list of usual status code*/
 $statusCodes = array(
   400=>'Bad Request',
