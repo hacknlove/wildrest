@@ -1,0 +1,30 @@
+{
+  "scripts":{
+    "test": "node test.js"
+  },
+  "name":"wildrest-E2E",
+  "version":"0.1.0",
+  "description":"e2e integration test for http APIs",
+  "keywords":["e2e","integration testing","REST","wildrest","http","api"],
+  "homepage":"http://wildrest.pykiss.com/e2e",
+  "bugs":{
+    "url":"http://github.com/pykiss/wildrest-e2e/issues",
+    "email":"antonio@pykiss.com"
+  },
+  "license": "LGPL",
+  "author":{
+    "name":"Antonio Fernández Porrúa",
+    "email":"antonio@pykiss.com",
+    "url":"blog.pykiss.com"
+  },
+  "main":"wildrest.e2e.js",
+  "repository":{
+    "type":"git",
+    "url":"http://github.com/python/wildrest-e2e"
+  },
+  "dependencies":{
+    "request" : ">=2.27",
+    "diff": ">=1.0.7",
+    "colors":">=0.6.2"
+  }
+}
