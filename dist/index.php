@@ -1,5 +1,5 @@
 <?php
-
+ 
 /*list of usual status code*/
 $statusCodes = array(
   400=>'Bad Request',
@@ -36,13 +36,24 @@ function error($code, $custom=''){
   exit(json_encode(array('error'=>$text)));
   
 }
-function getJson(){
-  $raw = file_get_contents('php://input');
-  if($raw){
-    $_POST = json_decode($raw, true);
+function getPOST(){
+
+  if($_SERVER['CONTENT_TYPE']=='multipart/form-data'){
+    return;
   }
-  if(is_null($_POST)){
-    error('400','bad json');
+  if($_SERVER['CONTENT_TYPE']=='multipart/form-data'){
+    return;
+  }
+
+  if($raw = file_get_contents('php://input')){
+    if($_SERVER['CONTENT_TYPE'] == 'application/json'){
+      $_POST = json_decode($raw, true);
+    }else if($_SERVER['CONTENT_TYPE'] == 'application/xml'){
+      error(500,'xml not implemented');
+    }
+    if(is_null($_POST)){
+      error('400','bad payload');
+    }
   }
 }
 function matchUrl(){
@@ -59,10 +70,24 @@ function matchUrl(){
     if($routelength!=$urllength){
       continue;
     }
+
+    //parche para '/'
+    if($route==''){
+      if($url==''){
+        $match=true;
+        break;
+      }else{
+        continue;
+      }
+    }
     
     $params = array();
 
     foreach($route as $index=>$value){
+      //parche para '...//...'
+      if($value==''){
+        continue;
+      }
       if($value[0] == ':'){
         $params[substr($value,1)] = $url[$index];
         continue;
@@ -136,6 +161,8 @@ function run(){
     call_user_func($_SERVER[' request']['function']);
   }
 }
+
+
 
 getJson();
 
