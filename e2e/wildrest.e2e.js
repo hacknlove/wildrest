@@ -106,7 +106,7 @@ E2E.prototype.HTTP = function(method, req, title){
       status._resolve_();
       if(e){
         console.log(status._gettitle_().bold);
-        console.inspect(e);
+        console.log(util.inspect(e));
       }
     });
   });
@@ -183,3 +183,11 @@ E2E.prototype.error = function(message){
   console.log(message);
   this.e=true;
 }
+E2E.prototype.show = function(){
+    util.inspect(this._get_('body'))
+  return this;
+}
+
+
+
+module.exports.E2E = E2E;

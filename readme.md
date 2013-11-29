@@ -23,7 +23,7 @@ $routes = array(
 
 
 ## `/usr`
-All your code goes into the folder `/usr`
+All your code goes into the folder `/routes`
 
 
 ### `init.php`
@@ -31,7 +31,7 @@ Here you must set up your `$routes` config array.
 
 You can connect with your databases too, or do any other start logic.
 
-If any of your routes uses the `auth` option, you must declare the `auth_check` here.
+If any of your routes uses the `auth` option, you must declare the `auth_check` function here.
 
 ### `auth_check`
 
@@ -41,7 +41,7 @@ function auth_check($auth){
 }
 ```
 
-**warning** if you uses any `$_GET` or `$_POST` parameters, and the `_GET` or `_POST` options, you must either unset these auth parameters to avoid the parser to find an unknown parameter.
+**warning** if you uses any `$_GET` or `$_POST` parameters, and the `query` or `json` options, you must unset these parameters to avoid the parser to find an unknown parameter.
 
 
 
@@ -107,12 +107,12 @@ If there is not `' default '` method, any undeclared method will get `405 Method
 ```
     array(
       'auth'=>'user' // 'admin' | false | 'guest' | array(...) | ...
-      '_GET'=>array(
+      'query'=>array(
         'foo'=>true, // foo is required
         'bar'=>false,// bar is optional
         '*'  => true // there can be other $_GET parameters 
       ),
-      '_POST'=>array(
+      'json'=>array(
         'qux'=>false, // qux is optional
         'tny'=>true,  // tny is required
         '*'  =>false  // there cannot be other $_POST parameters
@@ -126,20 +126,20 @@ No option is required, everyone is optional.
 ##### `'auth'`
 if `'auth'` is set, `auth_check` will be called with its value.
 
-##### `_GET` and `_POST`
+##### `query` and `json`
 Here you can set with params are required, optional or if there can be random parameters.
  
 ##### `require` and `function`
 You can set with file or function will be required or called to process the request
 
-**warning** if you use `require` or `function` you must allways exit with `response`, `error` or `exit`. Because if the program do not exit, it will try to do the `/urs/routes/` thing. 
+**warning** if you use `require` or `function` you must allways exit with `response`, `error` or `exit`. Because if the program do not exit, it will try to do the `/routes/routes/` thing. 
 
-### `/usr/routes/`
-You can keep your code neat, placing the code for each route and method in his outn folder.
+### `/routes/routes/`
+You can keep your code neat, placing the code for each route and method in his own folder.
 
-So if you want to serve `GET /foo/:bar/:id`, you need to create an populate `usr/urls/foo/GET` 
+So if you want to serve `GET /foo/:bar/:id`, you need to create an populate `routes/routes/foo/GET` 
 
-and if you want to serve  `DELETE /some/:stuff` you need to create and populate `usr/urls/some/DELETE`
+and if you want to serve  `DELETE /some/:stuff` you need to create and populate `routes/routes/some/DELETE`
 
 Inside of these `GET`, `POST`, `PUT`, `DELETE` or `WHATEVER` folder there have to be three files
 * control.php
@@ -148,7 +148,12 @@ Inside of these `GET`, `POST`, `PUT`, `DELETE` or `WHATEVER` folder there have t
 
 ### api
 
-#### `error([status code],[response]);
-`error` 
+#### `error([STATUS CODE],[RESPONSE]);
+Exit setting a HTTP status, and sending a json 
+```
+  {"error":[RESPONSE]}
+```
 
-#### `response`
+#### `response([response]`)
+Exit sending a json
+

@@ -56,7 +56,7 @@ function matchUrl(){
     $route = explode('/',substr($route,1));
     $routelength = count($route)-1;
     
-    if($routelength>$urllength){
+    if($routelength!=$urllength){
       continue;
     }
     
