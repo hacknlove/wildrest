@@ -37,24 +37,8 @@ function error($code, $custom=''){
   
 }
 function getJson(){
-/*  if($_SERVER['REQUEST_METHOD']!='POST' and $_SERVER['REQUEST_METHOD']!='PUT'){
-    return;
-  }
-
-  if($_SERVER['CONTENT_TYPE']=='multipart/form-data'){
-    return;
-  }
-  if($_SERVER['CONTENT_TYPE']=='multipart/form-data'){
-    $_POST = 'verdes';
-    return;
-  }*/
-
   if($raw = file_get_contents('php://input')){
-#    if($_SERVER['CONTENT_TYPE'] == 'application/json'){
       $_POST = json_decode($raw, true);
-#    }else if($_SERVER['CONTENT_TYPE'] == 'application/xml'){
-#      error(500,'xml not implemented');
-#    }
     if(is_null($_POST)){
       error('400','bad payload');
     }
