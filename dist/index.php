@@ -37,24 +37,11 @@ function error($code, $custom=''){
   
 }
 function getJson(){
-/*  if($_SERVER['REQUEST_METHOD']!='POST' and $_SERVER['REQUEST_METHOD']!='PUT'){
+  if(isset($_SERVER[' request']['upload']) and $_SERVER[' request']['upload']){
     return;
   }
-
-  if($_SERVER['CONTENT_TYPE']=='multipart/form-data'){
-    return;
-  }
-  if($_SERVER['CONTENT_TYPE']=='multipart/form-data'){
-    $_POST = 'verdes';
-    return;
-  }*/
-
   if($raw = file_get_contents('php://input')){
-#    if($_SERVER['CONTENT_TYPE'] == 'application/json'){
       $_POST = json_decode($raw, true);
-#    }else if($_SERVER['CONTENT_TYPE'] == 'application/xml'){
-#      error(500,'xml not implemented');
-#    }
     if(is_null($_POST)){
       error('400','bad payload');
     }
@@ -165,14 +152,95 @@ function run(){
     call_user_func($_SERVER[' request']['function']);
   }
 }
+function upload($to, $filename=false){
+  
+  if(isset($_FILES[$filename])){
+    move_uploaded_file($_FILES[$filename]['tmp_name'], $to);
+    return true;
+  }
+  
+  $inputHandler = fopen('php://input', "rb");
+	$fileHandler = fopen($to, "ab+");
+	while(true) {
+    $buffer = fread($inputHandler, 4096);
+    if($buffer===false){
+      unlink($to);
+      return false;
+    }
+    if (strlen($buffer) ==0) {
+        fclose($inputHandler);
+        fclose($fileHandler);
+        return true;
+    }
+    fwrite($fileHandler, $buffer);
+	}
+}
 
+function safeFileExists($path){
+  /*
+   * Comprueba si un archivo existe.
+   * Devuelve false si el archivo NO existe o si la ruta trata salir de basepath
+   * 
+   * de otro modo devuelve la ruta empezando por ./
+   * */
 
+  $path = './'.$path;
+  
+  # no puede contener /../ ni \..\ ni mezclas
+  if (
+    strpos($path,'/../')!==false and
+    strpos($path,'\\..\\')!==false and
+    strpos($path,'/..\\')!==false and
+    strpos($path,'\\../')!==false
+    ){
+    return false;
+  }
 
-getJson();
+  if(file_exists($path)){
+    return $path;
+  }
+  return false;
+}
+function isSafePath($path){
+  /**
+   * Devuelve false si path es sospechoso de querer salir del directorio actual
+   * en caso contrario devuelve la ruta con ./ delante
+   **/
+  $path = './'.$path;
+  
+  # no puede contener /../ ni \..\ ni mezclas
+  if (
+    strpos($path,'/../')!==false and
+    strpos($path,'\\..\\')!==false and
+    strpos($path,'/..\\')!==false and
+    strpos($path,'\\../')!==false
+    ){
+    return false;
+  }
+  
+  return $path;
+
+}
+function sendFile($path, $name=false){
+  if(!file_exists($path)){
+    error(500);
+  }
+  if(!$name){
+    $name=substr(strstr($path,'/'),1);
+  }
+  header("X-Sendfile: $path");
+  header("Content-Type: image"); #TODO detectar el tipo y mandar un encabezado apropiado
+  exit();
+}
+
 
 require './routes/init.php';
 
+
 matchUrl();
+
+getJson();
+
 auth();
 $query = &$_GET;
 testParams('query');
