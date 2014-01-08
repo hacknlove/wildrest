@@ -63,7 +63,7 @@ function getJson(){
 function matchUrl(){
   global $routes;
 
-  $url = explode('/',substr(strchr($_SERVER['REQUEST_URI'].'?','?',true),1));
+  $url = array_map('urldecode',explode('/',substr(strchr($_SERVER['REQUEST_URI'].'?','?',true),1)));
   $urllength = count($url)-1;
   $match = false;
 
