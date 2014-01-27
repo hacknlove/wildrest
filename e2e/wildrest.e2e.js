@@ -143,7 +143,7 @@ E2E.prototype.expect = function(expectation, title){
         var jsonbody = JSON.stringify(body, null, 4),
         jsonrespuesta = JSON.stringify(expectation.json, null, 4);
         if(jsonbody!=jsonrespuesta){
-          var output = '',    
+          var output = '',
           jsondiff = diff.diffWords(jsonrespuesta, jsonbody);
 
           jsondiff.forEach(function(item){

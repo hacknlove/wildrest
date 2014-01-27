@@ -22,7 +22,7 @@ function error($code, $custom=''){
   if(isset($statusCodes[$code])){
     $header = $statusCodes[$code];
   }else{
-    $header = $custom;
+    $header = json_encode($custom);
   }
   
   if($custom){
@@ -160,8 +160,8 @@ function upload($to, $filename=false){
   }
   
   $inputHandler = fopen('php://input', "rb");
-	$fileHandler = fopen($to, "ab+");
-	while(true) {
+  $fileHandler = fopen($to, "ab+");
+  while(true) {
     $buffer = fread($inputHandler, 4096);
     if($buffer===false){
       unlink($to);
@@ -173,7 +173,7 @@ function upload($to, $filename=false){
         return true;
     }
     fwrite($fileHandler, $buffer);
-	}
+  }
 }
 
 function safeFileExists($path){
