@@ -145,20 +145,6 @@ function response($array){
   exit(json_encode($array));
 }
 function run(){
-  if(isset($_SERVER[' request']['require'])){
-    require './usr/'.$_SERVER[' request']['require'];
-  }
-  if(isset($_SERVER[' request']['function'])){
-    call_user_func($_SERVER[' request']['function']);
-  }
-  if(isset($_SERVER[' request']['folder'])){
-    $folder = "./routes/routes/{$_SERVER[' request']['folder']}/";
-  }else{
-    $folder = "./routes/routes/{$_SERVER[' url'][0]}/{$_SERVER['REQUEST_METHOD']}/";
-  }
-  include $folder."control.php";
-  include $folder."model.php";
-  include $folder."view.php";
 }
 function upload($to, $filename=false){
   
@@ -254,5 +240,20 @@ $query = &$_GET;
 testParams('query');
 $json = &$_POST;
 testParams('json');
-run();
+
+//RUN
+  if(isset($_SERVER[' request']['require'])){
+    require './usr/'.$_SERVER[' request']['require'];
+  }
+  if(isset($_SERVER[' request']['function'])){
+    call_user_func($_SERVER[' request']['function']);
+  }
+  if(isset($_SERVER[' request']['folder'])){
+    $folder = "./routes/routes/{$_SERVER[' request']['folder']}/";
+  }else{
+    $folder = "./routes/routes/{$_SERVER[' url'][0]}/{$_SERVER['REQUEST_METHOD']}/";
+  }
+  include $folder."control.php";
+  include $folder."model.php";
+  include $folder."view.php";
 
