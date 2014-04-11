@@ -1,5 +1,6 @@
 RewriteEngine On
 
 RewriteCond %{REQUEST_URI} !^\/index\.php$
+RewriteCond %{REQUEST_URI} !^\/static/
 
 RewriteRule .* index.php  [L,QSA]
