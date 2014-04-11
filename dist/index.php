@@ -253,7 +253,17 @@ testParams('json');
   }else{
     $folder = "./routes/routes/{$_SERVER[' url'][0]}/{$_SERVER['REQUEST_METHOD']}/";
   }
-  include $folder."control.php";
-  include $folder."model.php";
-  include $folder."view.php";
-
+  
+  if(file_exists($folder."control.php")){
+    include $folder."control.php";
+  }
+  if(file_exists($folder."model.php")){
+    include $folder."model.php";
+  }
+  if(file_exists($folder."view.php")){
+    include $folder."view.php";
+  }else{
+    if(isset($response)){
+      response($response);
+    }
+  }
