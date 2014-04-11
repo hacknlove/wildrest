@@ -216,6 +216,10 @@ function isSafePath($path){
 
 }
 function sendFile($path, $name=false){
+  $finfo = finfo_open(FILEINFO_MIME);
+  $mime = finfo_file($finfo, $path);
+  finfo_close($finfo);
+
   if(!file_exists($path)){
     error(500);
   }
@@ -223,7 +227,7 @@ function sendFile($path, $name=false){
     $name=substr(strstr($path,'/'),1);
   }
   header("X-Sendfile: $path");
-  header("Content-Type: image"); #TODO detectar el tipo y mandar un encabezado apropiado
+  header("Content-Type: $mime");
   exit();
 }
 
