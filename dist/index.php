@@ -50,9 +50,9 @@ function getJson(){
 function matchUrl(){
   global $routes;
 
-  $url = preg_replace('#^(?:http(?:s?):/+[^/]*)#','',$_SERVER['REQUEST_URI']);
+  $_SERVER['REQUEST_URI'] = preg_replace('#^(?:http(?:s?):/+[^/]*)#','',$_SERVER['REQUEST_URI']);
 
-  $url = array_map('urldecode',explode('/',substr(strchr($url.'?','?',true),1)));
+  $url = array_map('urldecode',explode('/',substr(strchr($_SERVER['REQUEST_URI'].'?','?',true),1)));
   $urllength = count($url)-1;
   $match = false;
 
