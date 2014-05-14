@@ -1,5 +1,5 @@
 <?php
- 
+
 /*list of usual status code*/
 $statusCodes = array(
   400=>'Bad Request',
@@ -150,9 +150,35 @@ function run(){
 }
 function upload($to, $filename=false){
   
+  
   if(isset($_FILES[$filename])){
-    move_uploaded_file($_FILES[$filename]['tmp_name'], $to);
-    return true;
+    switch($_FILES[$filename]['error']){
+      case UPLOAD_ERR_INI_SIZE:
+        error(400, 'The uploaded file exceeds the upload_max_filesize directive in php.ini.');
+      break;
+      case UPLOAD_ERR_FORM_SIZE:
+        error(400, 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.');
+      break;
+      case UPLOAD_ERR_PARTIAL:
+        error(400, 'The uploaded file was only partially uploaded.');
+      break;
+      case UPLOAD_ERR_NO_FILE:
+        error(400, 'No file was uploaded.');
+      break;
+      case UPLOAD_ERR_NO_TMP_DIR:
+        error(400, 'Missing a temporary folder.');
+      break;
+      case UPLOAD_ERR_CANT_WRITE:
+        error(400, 'Failed to write file to disk.');
+      break;
+      case UPLOAD_ERR_EXTENSION:
+        error(400, 'A PHP extension stopped the file upload.');
+      break;
+      case UPLOAD_ERR_OK;
+        move_uploaded_file($_FILES[$filename]['tmp_name'], $to);
+        return true;
+      break;
+    }
   }
   
   $inputHandler = fopen('php://input', "rb");
@@ -170,6 +196,7 @@ function upload($to, $filename=false){
     }
     fwrite($fileHandler, $buffer);
   }
+
 }
 
 function safeFileExists($path){
